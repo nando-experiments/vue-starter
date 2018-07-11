@@ -1,21 +1,32 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-import About from './views/About.vue'
+
+import DefaultLayout from '@/views/Layouts/default.vue'
+import HomePage from '@/views/Home/index.vue'
+import AboutPage from '@/views/About/index.vue'
+import Error404Page from '@/views/Errors/404.vue'
 
 Vue.use(Router)
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
+const routes = [
+  {
+    path: '/',
+    component: DefaultLayout,
+    meta: {
+      auth: true,
+      bodyClass: 'app'
     },
-    {
-      path: '/about',
-      name: 'about',
-      component: About
-    }
-  ]
+    children: [
+      { path: '/', name: 'home', component: HomePage, meta: { bodyClass: 'home-page' } },
+      { path: '/about', name: 'about', component: AboutPage, meta: { bodyClass: 'about-page' } }
+    ]
+  },
+  { path: '*', component: Error404Page, meta: { bodyClass: 'error404-page' } }
+]
+
+const router = new Router({
+  routes,
+  mode: 'history'
 })
+
+export default router
